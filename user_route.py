@@ -13,12 +13,18 @@ router = APIRouter(prefix="/users", tags=["Users"])
 #Ele abre e fecha a conexão com o banco automaticamente.
 #Evita vazamento de conexão.
 #Equivalente a um @Transactional com @Autowired EntityManager no Spring.
+
 def get_db():
     db = SessionLocal()
     try:
         yield db
+        # O yield transforma a função em um gerador.
+        # Ele pausa a execução e entrega o valor (db) para o FastAPI.
+        # Depois que o endpoint termina, o código após o yield é executado (db.close()).
+        # Isso garante que a conexão com o banco seja sempre fechada corretamente.
+
     finally:
-        db.close
+        db.close()
 
 
 #✅ 8. O que significa db: Session = Depends(get_db)?
